@@ -4,7 +4,7 @@
   "description": "api practice",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon ./public/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "yuanchao",
@@ -15,5 +15,8 @@
     "express": "^4.17.1",
     "moment": "^2.24.0",
     "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
   }
 }

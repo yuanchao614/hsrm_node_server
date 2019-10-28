@@ -58,7 +58,7 @@ router.get('/user/login', (req, res) => {
  * 查看所有用户
  */
 
-router.get('/user/allUser',(req,res) => { // 获取所有
+router.get('/user/allUsers',(req,res) => { // 获取所有
     let _res = res;
     pool.getConnection((err, conn) => {
         conn.query(userSQL.queryAll, (e, result) => {
