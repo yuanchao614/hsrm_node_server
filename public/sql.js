@@ -7,7 +7,8 @@ const userSQL = {
     deleteUser: 'delete from user where username=?', // 删除用户
     queryAllHeroes: 'select * from person',
     queryHeroById: 'select * from person where id = ?',
-    delHeroById: 'DELETE FROM person WHERE id=?'
+    delHeroById: 'DELETE FROM person WHERE id=?',
+    addHero: 'insert into person set ?'
 }
 
 module.exports = userSQL

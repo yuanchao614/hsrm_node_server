@@ -1,2 +1,2 @@
-.deploy_git/
-node_modules/
+# 提交到GitHub时忽略node_modules
+/node_modules

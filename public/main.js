@@ -1,6 +1,12 @@
 const { app, pool } =require('./connect')
+const bodyParser = require('body-parser');
+app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+	extended: false
+}))
 const user = require('../user')
 const heroes = require('../heroes')
+
 app.all('*', (req, res, next) => {
     //这里处理全局拦截，一定要写在最上面
     next()
