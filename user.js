@@ -1,8 +1,10 @@
 const { pool, router, resJson } = require('./public/connect')
+var moment = require('moment')
 const userSQL = require('./public/sql')
 /**
  * 用户登录功能
  */
+console.log(moment().format().split('+')[0]);
 router.get('/user/login', (req, res) => {
     let user = {
         username: req.query.name,
@@ -53,18 +55,60 @@ router.get('/user/login', (req, res) => {
 })
 
 /**
+ * 查看所有用户
+ */
+
+router.get('/user/allUser',(req,res) => { // 获取所有
+    let _res = res;
+    pool.getConnection((err, conn) => {
+        conn.query(userSQL.queryAll, (e, result) => {
+            if (e) _data = {
+                code: -1,
+                msg: e
+            }
+            //查询成功时
+            if (result && result.length) {
+                _data = {
+                    code: 0,
+                    msg: '查询成功',
+                    data: {
+                        result
+                    }
+                }
+            } else {
+                _data = {
+                    code: -1,
+                    msg: '获取失败'
+                }
+            }
+            resJson(_res, _data)
+        })
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+    })
+});
+
+
+/**
  * 注册用户功能
  */
 
 router.get('/user/register', (req, res) => {
     // 获取前台页面传过来的参数
     let user = {
+        id: req.query.id,
         username: req.query.name,
         realname: req.query.realname,
-        password: req.query.password
+        password: req.query.password,
+        create_time: moment().format().split('+')[0]
     }
     let _res = res;
     // 判断参数是否为空
+    if (!user.id) {
+        return resJson(_res, {
+            code: -1,
+            msg: '账号不能为空'
+        })
+    }
     if (!user.username) {
         return resJson(_res, {
             code: -1,
@@ -112,7 +156,8 @@ router.get('/user/register', (req, res) => {
                         } else {
                             _data = {
                                 code: -1,
-                                msg: '注册失败'
+                                msg: '注册失败',
+                                time: moment().format()
                             }
                         }
                     })
@@ -126,15 +171,18 @@ router.get('/user/register', (req, res) => {
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 })
+
 /**
  * 修改密码
  */
+
 router.get('/user/updatePassword', (req, res) => {
     let user = {
         username: req.query.name,
         oldPassword: req.query.oldPassword,
         newPassword: req.query.newPassword,
-        againPassword: req.query.againPassword
+        againPassword: req.query.againPassword,
+        update_time: moment().format().split('+')[0]
     }
     let _res = res;
     // 判断参数是否为空
@@ -176,9 +224,10 @@ router.get('/user/updatePassword', (req, res) => {
                 if (r.length) {
                     //如不为空，则说明存在此用户且密码正确
                     conn.query(userSQL.updateUser, [{
-                        password: user.newPassword
+                        password: user.newPassword,
+                        update_time: user.update_time
                     }, user.username], (err, result) => {
-                        console.log(err)
+                        // console.log(err)
                         if (result) {
                             _data = {
                                 msg: '密码修改成功'
@@ -206,9 +255,11 @@ router.get('/user/updatePassword', (req, res) => {
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 })
+
 /**
  * 删除用户
  */
+
 router.get('/user/deleteUser', (req, res) => {
     // 获取前台页面传过来的参数
     let user = {
