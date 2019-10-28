@@ -10,7 +10,7 @@ app.all('/', (req, res) => {
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 })
-app.use('/user', user)
+app.use('/api', user)
 app.listen(3000, () => {
     console.log('服务启动','localhost:3000')
 })

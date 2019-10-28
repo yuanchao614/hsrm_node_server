@@ -3,7 +3,7 @@ const userSQL = require('./public/sql')
 /**
  * 用户登录功能
  */
-router.get('/login', (req, res) => {
+router.get('/api/login', (req, res) => {
     let user = {
         username: req.query.name,
         password: req.query.password
@@ -56,7 +56,7 @@ router.get('/login', (req, res) => {
  * 注册用户功能
  */
 
-router.get('/register', (req, res) => {
+router.get('/user/register', (req, res) => {
     // 获取前台页面传过来的参数
     let user = {
         username: req.query.name,
@@ -128,7 +128,7 @@ router.get('/register', (req, res) => {
 /**
  * 修改密码
  */
-router.get('/updatePassword', (req, res) => {
+router.get('/user/updatePassword', (req, res) => {
     let user = {
         username: req.query.name,
         oldPassword: req.query.oldPassword,
@@ -208,7 +208,7 @@ router.get('/updatePassword', (req, res) => {
 /**
  * 删除用户
  */
-router.get('/deleteUser', (req, res) => {
+router.get('/user/deleteUser', (req, res) => {
     // 获取前台页面传过来的参数
     let user = {
         username: req.query.name
