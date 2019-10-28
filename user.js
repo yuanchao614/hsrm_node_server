@@ -3,7 +3,7 @@ const userSQL = require('./public/sql')
 /**
  * 用户登录功能
  */
-router.get('/api/login', (req, res) => {
+router.get('/user/login', (req, res) => {
     let user = {
         username: req.query.name,
         password: req.query.password
@@ -106,6 +106,7 @@ router.get('/user/register', (req, res) => {
                     conn.query(userSQL.insert, user, (err, result) => {
                         if (result) {
                             _data = {
+                                code: 0,
                                 msg: '注册成功'
                             }
                         } else {

@@ -4,7 +4,10 @@ const userSQL = {
     queryByNamePassword: 'select * from  user where username=? and password=?',  // 通过用户名和密码索引查询用户
     insert: 'insert into user set ?',  // 插入新用户
     updateUser: 'update user set ? where username=?',// 更新用户信息
-    deleteUser: 'delete from user where username=?' // 删除用户
+    deleteUser: 'delete from user where username=?', // 删除用户
+    queryAllHeroes: 'select * from person',
+    queryHeroById: 'select * from person where id = ?',
+    delHeroById: 'DELETE FROM person WHERE id=?'
 }
 
 module.exports = userSQL

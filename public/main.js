@@ -1,5 +1,6 @@
 const { app, pool } =require('./connect')
 const user = require('../user')
+const heroes = require('../heroes')
 app.all('*', (req, res, next) => {
     //这里处理全局拦截，一定要写在最上面
     next()
@@ -11,6 +12,7 @@ app.all('/', (req, res) => {
     })
 })
 app.use('/api', user)
+app.use('/api', heroes)
 app.listen(3000, () => {
     console.log('服务启动','localhost:3000')
 })
