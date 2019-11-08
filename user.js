@@ -35,6 +35,7 @@ router.get('/user/login', (req, res) => {
             //通过用户名和密码索引查询数据，有数据说明用户存在且密码正确，只能返回登录成功，否则返回用户名不存在或登录密码错误
             if (result && result.length) {
                 _data = {
+                    code: 0,
                     msg: '登录成功',
                     data: {
                         userInfo: {
@@ -182,8 +183,9 @@ router.get('/user/updatePassword', (req, res) => {
         oldPassword: req.query.oldPassword,
         newPassword: req.query.newPassword,
         againPassword: req.query.againPassword,
-        update_time: moment().format().split('+')[0]
+        update_time: moment().format('YYYY/M/DD HH:mm')
     }
+    console.log(user.update_time);
     let _res = res;
     // 判断参数是否为空
     if (!user.username) {
