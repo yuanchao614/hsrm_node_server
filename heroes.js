@@ -1,5 +1,5 @@
 const { pool, router, resJson } = require('./public/connect')
-const userSQL = require('./public/sql')
+const {userSQL, lineManagement} = require('./public/sql')
 
 router.get('/getheros',(req,res) => { // 获取所有
     let _res = res;
@@ -132,17 +132,48 @@ router.post('/addhero',(req,res) => { // 添加
     })
 });
 
-// app.post('/api/addhero',(req,res) => {
-//     const id = req.query.id;
-//     const name = req.query.name;
-//     const age = req.query.age;
-//     const address = req.query.address;
-//     const sqlStr = 'insert into person set id=?,name=?,age=?,address=?'
-//     conn.query(sqlStr,[id,name,age,address],(err,results) => {
-//         if(err) return res.json({err_code:1,message:'添加失败',affectedRows:0})
-//         if(results.affectedRows !== 1) return res.json({err_code:1,message:'添加失败',affectedRows:0})
-//         res.json({err_code:0,message:'添加成功',affectedRows:results.affectedRows})
-//     })
-// })
+router.get('/getline',(req,res) => { // 获取所有
+    let _res = res;
+    pool.getConnection((err, conn) => {
+        conn.query(lineManagement.queryAllLine, (e, result) => {
+            if (e) _data = {
+                code: -1,
+                msg: e
+            }
+            //查询成功时
+            if (result && result.length) {
+                const pass_stationList = [];
+                result.forEach(item => {
+                    const list = getArry(item.pass_station);
+                    pass_stationList.push(list);
+                })
+                _data = {
+                    code: 0,
+                    msg: '查询成功',
+                    data: {
+                        result,
+                        pass_station: pass_stationList
+                    },
+                }
+            } else {
+                _data = {
+                    code: -1,
+                    msg: '获取失败'
+                }
+            }
+            resJson(_res, _data)
+        })
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+    })
+});
+
+function getArry(data) {
+    const arryList = [];
+    const arry = data.split(',');
+    arry.forEach(item => {
+        arryList.push(item)
+    });
+    return arryList;
+}
 
 module.exports = router;

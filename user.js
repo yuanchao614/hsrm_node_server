@@ -1,6 +1,7 @@
 const { pool, router, resJson } = require('./public/connect')
 var moment = require('moment')
-const userSQL = require('./public/sql')
+const {userSQL, lineManagement } = require('./public/sql')
+const jwt = require('jsonwebtoken') // 用于生成token
 /**
  * 用户登录功能
  */
@@ -34,15 +35,23 @@ router.get('/user/login', (req, res) => {
             }
             //通过用户名和密码索引查询数据，有数据说明用户存在且密码正确，只能返回登录成功，否则返回用户名不存在或登录密码错误
             if (result && result.length) {
+                console.log(result);
+                const token = jwt.sign({
+                    name: result.username,
+                    rolId:result.rol_id 
+                },'my_token',{expiresIn: '1h'});
+                console.log(token);
                 _data = {
                     code: 0,
                     msg: '登录成功',
                     data: {
                         userInfo: {
-                            username: user.username
+                            username: user.username,
+                            token: token
                         }
-                    }
+                    },
                 }
+                console.log(_data);
             } else {
                 _data = {
                     code: -1,

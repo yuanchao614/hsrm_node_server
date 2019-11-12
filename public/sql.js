@@ -11,4 +11,11 @@ const userSQL = {
     addHero: 'insert into person set ?'
 }
 
-module.exports = userSQL
+const lineManagement = {
+    queryAllLine: 'select * from hsrm_line',
+}
+
+module.exports = {
+    userSQL,
+    lineManagement
+}
