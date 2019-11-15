@@ -324,4 +324,75 @@ router.get('/user/deleteUser', (req, res) => {
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 })
+/**
+ * 操作记录
+ */
+router.get('/user/operator', (req, res) => {
+    // 获取前台页面传过来的参数
+    let operator = {
+        operator_id: req.query.operator_id,
+        operator_name: req.query.operator_name,
+        operator_data: req.query.operator_data,
+        operator_type: req.query.operator_type,
+        operator_time: moment().format().split('+')[0]
+    }
+    let _res = res;
+    let _data;
+    // 整合参数
+    // 从连接池获取连接
+    pool.getConnection((err, conn) => {
+                    //插入用户操作记录数据
+                    conn.query(userSQL.operationRecord, operator, (err, result) => {
+                        if (result) {
+                            _data = {
+                                code: 0,
+                                msg: '成功'
+                            }
+                        } else {
+                            _data = {
+                                code: -1,
+                                msg: '失败',
+                            }
+                        }
+                    })
+            setTimeout(() => {
+                //把操作结果返回给前台页面
+                resJson(_res, _data)
+            }, 200);
+            pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+        })
+    })
+
+/**
+ * 查询所有用户操作记录
+ */
+router.get('/user/alloperators',(req,res) => { // 获取所有
+    let _res = res;
+    pool.getConnection((err, conn) => {
+        conn.query(userSQL.getOperationRecord, (e, result) => {
+            if (e) _data = {
+                code: -1,
+                msg: e
+            }
+            //查询成功时
+            if (result && result.length) {
+                _data = {
+                    code: 0,
+                    msg: '查询成功',
+                    data: {
+                        result
+                    }
+                }
+            } else {
+                _data = {
+                    code: -1,
+                    msg: '获取失败'
+                }
+            }
+            resJson(_res, _data)
+        })
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+    })
+});
+
 module.exports = router;
