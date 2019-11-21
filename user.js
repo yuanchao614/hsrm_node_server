@@ -1,11 +1,77 @@
-const { pool, router, resJson } = require('./public/connect')
+const {
+    pool,
+    router,
+    resJson
+} = require('./public/connect')
 var moment = require('moment')
-const {userSQL, lineManagement } = require('./public/sql')
+const {
+    userSQL,
+    lineManagement
+} = require('./public/sql')
 const jwt = require('jsonwebtoken') // 用于生成token
+/**
+ * 用户登出功能
+ */
+console.log(moment().format().split('+')[0]);
+router.get('/user/loginout', (req, res) => {
+    let user = {
+        username: req.query.name
+    }
+    let _res = res;
+    if (!user.username) {
+        return resJson(_res, {
+            code: -1,
+            msg: '用户名不能为空'
+        })
+    }
+    let _data;
+    // 从连接池获取链接
+    pool.getConnection((err, conn) => {
+        conn.query(userSQL.queryByName, user.username, (e, result) => {
+            if (e) _data = {
+                code: -1,
+                msg: e
+            }
+            console.log(123);
+            // 如果查询到有用户
+            if (result && result.length) {
+                console.log(456);
+                _data = {
+                    code: 0,
+                    msg: '查询成功/退出登录',
+                    data: {
+                        userInfo: {
+                            username: user.username,
+                        }
+                    }
+                }
+                conn.query(userSQL.isloginout, user.username, (err, result) => {
+                    // console.log(err)
+                    if (result) {
+                        _data = {
+                            msg: '成功'
+                        }
+                    } else {
+                        _data = {
+                            code: -1,
+                            msg: '失败'
+                        }
+                    }
+                })
+            } else {
+                _data = {
+                    code: -1,
+                    msg: '用户名不存在'
+                }
+            }
+            resJson(_res, _data)
+        })
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+    })
+})
 /**
  * 用户登录功能
  */
-console.log(moment().format().split('+')[0]);
 router.get('/user/login', (req, res) => {
     let user = {
         username: req.query.name,
@@ -35,11 +101,12 @@ router.get('/user/login', (req, res) => {
             }
             //通过用户名和密码索引查询数据，有数据说明用户存在且密码正确，只能返回登录成功，否则返回用户名不存在或登录密码错误
             if (result && result.length) {
-                console.log(result);
                 const token = jwt.sign({
                     name: result.username,
-                    rolId:result.rol_id 
-                },'my_token',{expiresIn: '1h'});
+                    rolId: result.rol_id
+                }, 'my_token', {
+                    expiresIn: '1h'
+                });
                 console.log(token);
                 _data = {
                     code: 0,
@@ -51,7 +118,20 @@ router.get('/user/login', (req, res) => {
                         }
                     },
                 }
-                console.log(_data);
+                // 登陆时设active为1表示在线状态
+                conn.query(userSQL.islogin, user.username, (err, result) => {
+                    // console.log(err)
+                    if (result) {
+                        _data = {
+                            msg: '成功'
+                        }
+                    } else {
+                        _data = {
+                            code: -1,
+                            msg: '失败'
+                        }
+                    }
+                })
             } else {
                 _data = {
                     code: -1,
@@ -68,7 +148,7 @@ router.get('/user/login', (req, res) => {
  * 查看所有用户
  */
 
-router.get('/user/allUsers',(req,res) => { // 获取所有
+router.get('/user/allUsers', (req, res) => { // 获取所有
     let _res = res;
     pool.getConnection((err, conn) => {
         conn.query(userSQL.queryAll, (e, result) => {
@@ -97,7 +177,6 @@ router.get('/user/allUsers',(req,res) => { // 获取所有
     })
 });
 
-
 /**
  * 注册用户功能
  */
@@ -105,7 +184,7 @@ router.get('/user/allUsers',(req,res) => { // 获取所有
 router.get('/user/register', (req, res) => {
     // 获取前台页面传过来的参数
     let user = {
-        id: req.query.id,
+        user_id: req.query.id,
         username: req.query.name,
         realname: req.query.realname,
         password: req.query.password,
@@ -113,7 +192,7 @@ router.get('/user/register', (req, res) => {
     }
     let _res = res;
     // 判断参数是否为空
-    if (!user.id) {
+    if (!user.user_id) {
         return resJson(_res, {
             code: -1,
             msg: '账号不能为空'
@@ -167,7 +246,7 @@ router.get('/user/register', (req, res) => {
                             _data = {
                                 code: -1,
                                 msg: '注册失败',
-                                time: moment().format()
+                                // time: moment().format()
                             }
                         }
                     })
@@ -341,32 +420,32 @@ router.get('/user/operator', (req, res) => {
     // 整合参数
     // 从连接池获取连接
     pool.getConnection((err, conn) => {
-                    //插入用户操作记录数据
-                    conn.query(userSQL.operationRecord, operator, (err, result) => {
-                        if (result) {
-                            _data = {
-                                code: 0,
-                                msg: '成功'
-                            }
-                        } else {
-                            _data = {
-                                code: -1,
-                                msg: '失败',
-                            }
-                        }
-                    })
-            setTimeout(() => {
-                //把操作结果返回给前台页面
-                resJson(_res, _data)
-            }, 200);
-            pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+        //插入用户操作记录数据
+        conn.query(userSQL.operationRecord, operator, (err, result) => {
+            if (result) {
+                _data = {
+                    code: 0,
+                    msg: '成功'
+                }
+            } else {
+                _data = {
+                    code: -1,
+                    msg: '失败',
+                }
+            }
         })
+        setTimeout(() => {
+            //把操作结果返回给前台页面
+            resJson(_res, _data)
+        }, 200);
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
+})
 
 /**
  * 查询所有用户操作记录
  */
-router.get('/user/alloperators',(req,res) => { // 获取所有
+router.get('/user/alloperators', (req, res) => { // 获取所有
     let _res = res;
     pool.getConnection((err, conn) => {
         conn.query(userSQL.getOperationRecord, (e, result) => {
