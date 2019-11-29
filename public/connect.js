@@ -13,9 +13,9 @@ app.use(bodyParser.urlencoded({extended: false}))
  * 配置mysql
  */
 const option = {
-    host: 'localhost',
-    user: 'root',
-    password: 'yuanchao123456',
+    host: '148.70.69.132',
+    user: 'yc',
+    password: 'admin@YC123',
     // port: '3306',
     database: 'test',
     connectTimeout: 5000, //连接超时
