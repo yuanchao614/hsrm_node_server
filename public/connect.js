@@ -1,5 +1,6 @@
 const mysql = require('mysql')
 const express = require('express')
+// var bodyParser= require('body-parser');
 const app = express()
 const router = express.Router();
 
@@ -8,16 +9,16 @@ const bodyParser = require('body-parser')
 // json请求
 app.use(bodyParser.json())
 // 表单请求
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
 /**
  * 配置mysql
  */
 const option = {
-    host: '148.70.69.132',
-    user: 'yc',
-    password: 'admin@YC123',
+    host: 'localhost',
+    user: 'root',
+    password: 'yuanchao123456',
     // port: '3306',
-    database: 'test',
+    database: 'highspeed',
     connectTimeout: 5000, //连接超时
     multipleStatements: false //是否允许一个query中包含多条sql语句
 }

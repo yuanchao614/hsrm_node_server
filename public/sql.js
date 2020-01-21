@@ -8,7 +8,8 @@ const userSQL = {
     islogin: 'update hsrm_user set active=1 where username=?', // 用户在线状态
     isloginout: 'update hsrm_user set active=0 where username=?', // 用户离线状态
     operationRecord: 'insert into user_log set ?', // 用户操作记录
-    getOperationRecord: 'select * from user_log' // 查询所有操作记录
+    getOperationRecord: 'select * from user_log', // 查询所有操作记录
+    deleOperator: 'delete from user_log where operator_id=?',
 }
 
 const lineManagement = {
@@ -19,7 +20,17 @@ const lineManagement = {
     updateLine: 'update hsrm_line set ? where line_num=?' // 根据线路编号更新数据
 }
 
+const highSpeedRailManagement = {
+    queryAllHighSpeedRail: 'select * from hsrm_highspeed_rail', // 查询所有线路信息
+    queryById: 'select * from  hsrm_highspeed_rail where hs_carId=?', // 根据列车编号查找
+    insert: 'insert into hsrm_highspeed_rail set ?', // 增加列车
+    deleteRail: 'delete from hsrm_highspeed_rail where hs_carId=?', // 根据列车编号删除
+    updateRail: 'update hsrm_highspeed_rail set ? where hs_carId=?' // 根据列车编号更新数据
+}
+
+
 module.exports = {
     userSQL,
-    lineManagement
+    lineManagement,
+    highSpeedRailManagement
 }

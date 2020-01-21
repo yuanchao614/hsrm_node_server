@@ -1,12 +1,12 @@
 const { pool, router, resJson } = require('./public/connect')
-const { lineManagement} = require('./public/sql')
+const { highSpeedRailManagement} = require('./public/sql')
 
 
-router.get('/lineManagement/deleteLineById',(req,res) => { // 根据id删除
+router.get('/highSpeedRailManagement/deleteRailById',(req,res) => { // 根据id删除
     const id = req.query.id
     let _res = res;
     pool.getConnection((err, conn) => {
-        conn.query(lineManagement.deleteLine, id, (e, result) => {
+        conn.query(highSpeedRailManagement.deleteRail, id, (e, result) => {
             if (e) _data = {
                 code: -1,
                 msg: e
@@ -14,7 +14,7 @@ router.get('/lineManagement/deleteLineById',(req,res) => { // 根据id删除
             //删除成功时
             if (result.affectedRows > 0) {
                 _data = {
-                    code: 2002,
+                    code: 3003,
                     msg: '删除高铁线路信息成功',
                     data: {
                         result
@@ -38,27 +38,21 @@ router.get('/lineManagement/deleteLineById',(req,res) => { // 根据id删除
 });
 
 
-router.get('/lineManagement/getline',(req,res) => { // 获取所有高铁线路
+router.get('/highSpeedRailManagement/getHighSpeedRail',(req,res) => { // 获取所有高铁线路
     let _res = res;
     pool.getConnection((err, conn) => {
-        conn.query(lineManagement.queryAllLine, (e, result) => {
+        conn.query(highSpeedRailManagement.queryAllHighSpeedRail, (e, result) => {
             if (e) _data = {
                 code: -1,
                 msg: e
             }
             //查询成功时
             if (result && result.length) {
-                const pass_stationList = [];
-                result.forEach(item => {
-                    const list = getArry(item.pass_station);
-                    pass_stationList.push(list);
-                })
                 _data = {
-                    code: 2001,
+                    code: 3001,
                     msg: '查询成功',
                     data: {
-                        result,
-                        pass_station: pass_stationList
+                        result
                     },
                 }
             } else {
@@ -74,7 +68,7 @@ router.get('/lineManagement/getline',(req,res) => { // 获取所有高铁线路
 });
 
 
-router.post('/lineManagement/addLine',function(req,res){
+router.post('/highSpeedRailManagement/addRail',function(req,res){
     let param = req.body;
     let _res = res;
     let _data;
@@ -82,7 +76,7 @@ router.post('/lineManagement/addLine',function(req,res){
     // 从连接池获取连接
     pool.getConnection((err, conn) => {
         // 查询数据库该用户是否已存在
-        conn.query(lineManagement.queryByNum, param.line_num, (e, r) => {
+        conn.query(highSpeedRailManagement.queryById, param.hs_carId, (e, r) => {
             if (e) _data = {
                 code: -1,
                 msg: e
@@ -90,18 +84,19 @@ router.post('/lineManagement/addLine',function(req,res){
             if (r) {
                 //判断用户列表是否为空
                 if (r.length) {
+                    console.log(r.length);
                     //如不为空，则说明存在此用户
                     _data = {
                         code: -1,
-                        msg: '线路编号已存在'
+                        msg: '高铁编号已存在'
                     }
                 } else {
                     //插入用户信息
-                    conn.query(lineManagement.insert, param, (err, result) => {
+                    conn.query(highSpeedRailManagement.insert, param, (err, result) => {
                         if (result) {
                             _data = {
-                                code: 2003,
-                                msg: '添加高铁线路信息成功'
+                                code: 3002,
+                                msg: '添加高铁信息成功'
                             }
                         } else {
                             _data = {
@@ -122,7 +117,7 @@ router.post('/lineManagement/addLine',function(req,res){
     console.log(req.body);
 })
 
-router.post('/lineManagement/updateLine',function(req,res){
+router.post('/highSpeedRailManagement/updateRail',function(req,res){
     let param = req.body;
     let _res = res;
     let _data;
@@ -130,7 +125,7 @@ router.post('/lineManagement/updateLine',function(req,res){
     // 从连接池获取连接
     pool.getConnection((err, conn) => {
         // 查询数据库该用户是否已存在
-        conn.query(lineManagement.queryByNum, param.line_num, (e, r) => {
+        conn.query(highSpeedRailManagement.queryById, param.hs_carId, (e, r) => {
             if (e) _data = {
                 code: -1,
                 msg: e
@@ -139,11 +134,11 @@ router.post('/lineManagement/updateLine',function(req,res){
                 //判断用户列表是否为空
                 if (r.length) {
                     //如不为空，则说明存在此用户
-                    conn.query(lineManagement.updateLine, [param, param.line_num], (err, result) => {
+                    conn.query(highSpeedRailManagement.updateRail, [param, param.hs_carId], (err, result) => {
                         if (result) {
                             _data = {
-                                code: 2004,
-                                msg: '修改高铁线路信息成功'
+                                code: 3004,
+                                msg: '修改高铁信息成功'
                             }
                         } else {
                             _data = {
@@ -161,17 +156,6 @@ router.post('/lineManagement/updateLine',function(req,res){
         })
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
-    console.log(req.body);
 })
-
-
-function getArry(data) { // 获取数组
-    const arryList = [];
-    const arry = data.split(',');
-    arry.forEach(item => {
-        arryList.push(item)
-    });
-    return arryList;
-}
 
 module.exports = router;

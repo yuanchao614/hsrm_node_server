@@ -101,6 +101,7 @@ router.get('/user/login', (req, res) => {
             }
             //通过用户名和密码索引查询数据，有数据说明用户存在且密码正确，只能返回登录成功，否则返回用户名不存在或登录密码错误
             if (result && result.length) {
+                console.log(result);
                 const token = jwt.sign({
                     name: result.username,
                     rolId: result.rol_id
@@ -114,7 +115,8 @@ router.get('/user/login', (req, res) => {
                     data: {
                         userInfo: {
                             username: user.username,
-                            token: token
+                            token: token,
+                            role_id: result.role_id
                         }
                     },
                 }
@@ -181,15 +183,9 @@ router.get('/user/allUsers', (req, res) => { // 获取所有
  * 注册用户功能
  */
 
-router.get('/user/register', (req, res) => {
-    // 获取前台页面传过来的参数
-    let user = {
-        user_id: req.query.id,
-        username: req.query.name,
-        realname: req.query.realname,
-        password: req.query.password,
-        create_time: moment().format().split('+')[0]
-    }
+router.post('/user/register', (req, res) => {
+    let user = req.body;
+    console.log(user);
     let _res = res;
     // 判断参数是否为空
     if (!user.user_id) {
@@ -239,7 +235,7 @@ router.get('/user/register', (req, res) => {
                     conn.query(userSQL.insert, user, (err, result) => {
                         if (result) {
                             _data = {
-                                code: 0,
+                                code: 1003,
                                 msg: '注册成功'
                             }
                         } else {
@@ -265,14 +261,8 @@ router.get('/user/register', (req, res) => {
  * 修改密码
  */
 
-router.get('/user/updatePassword', (req, res) => {
-    let user = {
-        username: req.query.name,
-        oldPassword: req.query.oldPassword,
-        newPassword: req.query.newPassword,
-        againPassword: req.query.againPassword,
-        update_time: moment().format('YYYY/M/DD HH:mm')
-    }
+router.post('/user/updatePassword', (req, res) => {
+    let user = req.body;
     console.log(user.update_time);
     let _res = res;
     // 判断参数是否为空
@@ -294,7 +284,7 @@ router.get('/user/updatePassword', (req, res) => {
             msg: '新密码不能为空'
         })
     }
-    if (!user.againPassword || user.againPassword !== user.newPassword) {
+    if (!user.conformPassword || user.conformPassword !== user.newPassword) {
         return resJson(_res, {
             code: -1,
             msg: '请确认新密码或两次新密码不一致'
@@ -384,6 +374,7 @@ router.get('/user/deleteUser', (req, res) => {
                         }
                         if (result) {
                             _data = {
+                                code: 1002,
                                 msg: '删除用户操作成功'
                             }
                         }
@@ -406,15 +397,8 @@ router.get('/user/deleteUser', (req, res) => {
 /**
  * 操作记录
  */
-router.get('/user/operator', (req, res) => {
-    // 获取前台页面传过来的参数
-    let operator = {
-        operator_id: req.query.operator_id,
-        operator_name: req.query.operator_name,
-        operator_data: req.query.operator_data,
-        operator_type: req.query.operator_type,
-        operator_time: moment().format().split('+')[0]
-    }
+router.post('/user/operator', (req, res) => {
+    let operator = req.body;
     let _res = res;
     let _data;
     // 整合参数
@@ -425,7 +409,7 @@ router.get('/user/operator', (req, res) => {
             if (result) {
                 _data = {
                     code: 0,
-                    msg: '成功'
+                    msg: '写入操作日志成功'
                 }
             } else {
                 _data = {
@@ -473,5 +457,41 @@ router.get('/user/alloperators', (req, res) => { // 获取所有
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 });
+
+router.get('/user/deleOperator',(req,res) => { // 根据id删除
+    const id = req.query.id
+    let _res = res;
+    pool.getConnection((err, conn) => {
+        conn.query(userSQL.deleOperator, id, (e, result) => {
+            if (e) _data = {
+                code: -1,
+                msg: e
+            }
+            //删除成功时
+            if (result.affectedRows > 0) {
+                _data = {
+                    code: 100000,
+                    msg: '删除操作日志信息成功',
+                    data: {
+                        result
+                    }
+                }
+            } else if (result.affectedRows == 0) {
+                _data = {
+                    code: -1,
+                    msg: '删除数据不存在'
+                } 
+            } else {
+                _data = {
+                    code: -1,
+                    msg: '删除失败'
+                }
+            }
+            resJson(_res, _data)
+        })
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+    })
+});
+
 
 module.exports = router;
