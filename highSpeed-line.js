@@ -38,7 +38,7 @@ router.get('/lineManagement/deleteLineById',(req,res) => { // 根据id删除
 });
 
 
-router.get('/lineManagement/getline',(req,res) => { // 获取所有高铁线路
+router.get('/lineManagement/getLine',(req,res) => { // 获取所有高铁线路
     let _res = res;
     pool.getConnection((err, conn) => {
         conn.query(lineManagement.queryAllLine, (e, result) => {
@@ -49,10 +49,10 @@ router.get('/lineManagement/getline',(req,res) => { // 获取所有高铁线路
             //查询成功时
             if (result && result.length) {
                 const pass_stationList = [];
-                result.forEach(item => {
-                    const list = getArry(item.pass_station);
-                    pass_stationList.push(list);
-                })
+                // result.forEach(item => {
+                //     const list = getArry(item.pass_station);
+                //     pass_stationList.push(list);
+                // })
                 _data = {
                     code: 2001,
                     msg: '查询成功',
