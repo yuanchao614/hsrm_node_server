@@ -161,7 +161,7 @@ router.get('/user/allUsers', (req, res) => { // 获取所有
             //查询成功时
             if (result && result.length) {
                 _data = {
-                    code: 0,
+                    code: 1001,
                     msg: '查询成功',
                     data: {
                         result
@@ -492,6 +492,52 @@ router.get('/user/deleOperator',(req,res) => { // 根据id删除
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 });
+
+router.post('/user/uploadImg', (req, res) => {
+    // 获取前台页面传过来的参数
+    let param = req.body;
+    let _res = res;
+    let _data;
+    // 整合参数
+    // 从连接池获取连接
+    pool.getConnection((err, conn) => {
+        // 查询数据库该用户是否已存在
+        conn.query(userSQL.queryByName, param.username, (e, r) => {
+            if (e) _data = {
+                code: -1,
+                msg: e
+            }
+            if (r) {
+                //判断用户列表是否为空
+                if (r.length) {
+                    //如不为空，则说明存在此用户
+                    conn.query(userSQL.uplodadImg, [param.avatar, param.username], (err, result) => {
+                        if (err) _data = {
+                            code: -1,
+                            msg: err
+                        }
+                        if (result) {
+                            _data = {
+                                code: 100001,
+                                msg: '上传头像操作成功'
+                            }
+                        }
+                    })
+                } else {
+                    _data = {
+                        code: -1,
+                        msg: '用户不存在，操作失败'
+                    }
+                }
+            }
+            setTimeout(() => {
+                //把操作结果返回给前台页面
+                resJson(_res, _data)
+            }, 200);
+        })
+        pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
+    })
+})
 
 
 module.exports = router;

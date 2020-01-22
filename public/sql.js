@@ -9,7 +9,8 @@ const userSQL = {
     isloginout: 'update hsrm_user set active=0 where username=?', // 用户离线状态
     operationRecord: 'insert into user_log set ?', // 用户操作记录
     getOperationRecord: 'select * from user_log', // 查询所有操作记录
-    deleOperator: 'delete from user_log where operator_id=?',
+    deleOperator: 'delete from user_log where operator_id=?', // 删除操作日志
+    uplodadImg: 'update hsrm_user set avatar= ? where username=?' // 上传头像
 }
 
 const lineManagement = {
