@@ -7,6 +7,7 @@ app.use(bodyParser.urlencoded({
 const user = require('../user')
 const hsrm_line = require('../highSpeed-line')
 const hsrm_highSpeedRail = require('../highSpeed-rail')
+const hsrm_ticket = require('../highSpeed-ticket')
 
 app.all('*', (req, res, next) => {
     //这里处理全局拦截，一定要写在最上面
@@ -21,6 +22,7 @@ app.all('/', (req, res) => {
 app.use('/api', user)
 app.use('/api', hsrm_line)
 app.use('/api', hsrm_highSpeedRail)
+app.use('/api', hsrm_ticket)
 app.listen(3000, () => {
     console.log('hsrm后台node服务启动成功','端口: localhost:3000')
 })
