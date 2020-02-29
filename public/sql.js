@@ -29,9 +29,18 @@ const highSpeedRailManagement = {
     updateRail: 'update hsrm_highspeed_rail set ? where hs_carId=?' // 根据列车编号更新数据
 }
 
+const highSpeedTicketsManagement = {
+    queryAllTickets: 'select * from hsrm_ticket', // 查询所有车票
+    queryById: 'select * from  hsrm_ticket where hs_railId=?', // 根据列车编号查找
+    insert: 'insert into hsrm_ticket set ?', // 新增车票
+    deleteTicket: 'delete from hsrm_ticket where id=?', // 根据车票编号删除
+    updateTicket: 'update hsrm_ticket set ? where id=?' // 根据车票编号更新数据
+}
+
 
 module.exports = {
     userSQL,
     lineManagement,
-    highSpeedRailManagement
+    highSpeedRailManagement,
+    highSpeedTicketsManagement
 }
