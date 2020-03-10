@@ -72,11 +72,12 @@ router.get('/user/loginout', (req, res) => {
 /**
  * 用户登录功能
  */
-router.get('/user/login', (req, res) => {
-    let user = {
-        username: req.query.name,
-        password: req.query.password
-    }
+router.post('/user/login', (req, res) => {
+    // let user = {
+    //     username: req.query.name,
+    //     password: req.query.password
+    // }
+    let user = req.body;
     let _res = res;
     // 判断参数是否为空
     if (!user.username) {

@@ -5,6 +5,7 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }))
 const user = require('../user')
+const font_user = require('../font-user')
 const hsrm_line = require('../highSpeed-line')
 const hsrm_highSpeedRail = require('../highSpeed-rail')
 const hsrm_ticket = require('../highSpeed-ticket')
@@ -20,6 +21,7 @@ app.all('/', (req, res) => {
     })
 })
 app.use('/api', user)
+app.use('/api', font_user)
 app.use('/api', hsrm_line)
 app.use('/api', hsrm_highSpeedRail)
 app.use('/api', hsrm_ticket)

@@ -165,13 +165,4 @@ router.post('/lineManagement/updateLine',function(req,res){
 })
 
 
-function getArry(data) { // 获取数组
-    const arryList = [];
-    const arry = data.split(',');
-    arry.forEach(item => {
-        arryList.push(item)
-    });
-    return arryList;
-}
-
 module.exports = router;
