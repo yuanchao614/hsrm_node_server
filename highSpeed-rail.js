@@ -115,7 +115,7 @@ router.post('/highSpeedRailManagement/addRail',function(req,res){
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
     console.log(req.body);
-})
+});
 
 router.post('/highSpeedRailManagement/updateRail',function(req,res){
     let param = req.body;
@@ -156,6 +156,6 @@ router.post('/highSpeedRailManagement/updateRail',function(req,res){
         })
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
-})
+});
 
 module.exports = router;
