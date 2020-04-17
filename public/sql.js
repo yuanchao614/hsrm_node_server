@@ -37,6 +37,12 @@ const highSpeedTicketsManagement = {
     updateTicket: 'update hsrm_ticket set ? where id=?' // 根据车票编号更新数据
 }
 
+const orderManagement = {
+    insert: 'insert into hsrm_order_ticket set ?', // 订票
+    queryByPhoneNum: 'select * from  hsrm_order_ticket where phoneNum=?', // 根据手机号查找
+    deleteOrder: 'delete from hsrm_order_ticket where id=?'
+}
+
 const fontUser = {
     register: 'insert into hsrm_font_user set ?',
     queryByPhone: 'select * from  hsrm_font_user where phoneNum=?',  // 通过用户名索引查询用户
@@ -49,5 +55,6 @@ module.exports = {
     fontUser,
     lineManagement,
     highSpeedRailManagement,
-    highSpeedTicketsManagement
+    highSpeedTicketsManagement,
+    orderManagement
 }

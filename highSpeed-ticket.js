@@ -117,7 +117,7 @@ router.post('/highSpeedTicketsManagement/addTicket',function(req,res){ // 修改
     console.log(req.body);
 })
 
-router.post('/highSpeedRailManagement/updateRail',function(req,res){
+router.post('/highSpeedTicketsManagement/updateTicket',function(req,res){
     let param = req.body;
     let _res = res;
     let _data;
@@ -125,7 +125,7 @@ router.post('/highSpeedRailManagement/updateRail',function(req,res){
     // 从连接池获取连接
     pool.getConnection((err, conn) => {
         // 查询数据库该用户是否已存在
-        conn.query(highSpeedRailManagement.queryById, param.hs_carId, (e, r) => {
+        conn.query(highSpeedTicketsManagement.queryById, param.hs_railId, (e, r) => {
             if (e) _data = {
                 code: -1,
                 msg: e
@@ -134,11 +134,11 @@ router.post('/highSpeedRailManagement/updateRail',function(req,res){
                 //判断用户列表是否为空
                 if (r.length) {
                     //如不为空，则说明存在此用户
-                    conn.query(highSpeedRailManagement.updateRail, [param, param.hs_carId], (err, result) => {
+                    conn.query(highSpeedTicketsManagement.updateTicket, [param, param.hs_railId], (err, result) => {
                         if (result) {
                             _data = {
-                                code: 3004,
-                                msg: '修改高铁信息成功'
+                                code: 5004,
+                                msg: '修改高铁车票信息成功'
                             }
                         } else {
                             _data = {
