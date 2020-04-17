@@ -134,7 +134,7 @@ router.post('/highSpeedTicketsManagement/updateTicket',function(req,res){
                 //判断用户列表是否为空
                 if (r.length) {
                     //如不为空，则说明存在此用户
-                    conn.query(highSpeedTicketsManagement.updateTicket, [param, param.hs_railId], (err, result) => {
+                    conn.query(highSpeedTicketsManagement.updateTicket, [param, param.id], (err, result) => {
                         if (result) {
                             _data = {
                                 code: 5004,
