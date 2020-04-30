@@ -68,7 +68,7 @@ router.get('/highSpeedTicketsManagement/queryAllTickets',(req,res) => { // 获�
 });
 
 
-router.post('/highSpeedTicketsManagement/addTicket',function(req,res){ // 修改
+router.post('/highSpeedTicketsManagement/addTicket',function(req,res){ // 新增
     let param = req.body;
     let _res = res;
     let _data;
@@ -117,6 +117,7 @@ router.post('/highSpeedTicketsManagement/addTicket',function(req,res){ // 修改
     console.log(req.body);
 })
 
+// 修改
 router.post('/highSpeedTicketsManagement/updateTicket',function(req,res){
     let param = req.body;
     let _res = res;

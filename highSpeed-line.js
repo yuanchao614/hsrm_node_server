@@ -73,7 +73,7 @@ router.get('/lineManagement/getLine',(req,res) => { // 获取所有高铁线路
     })
 });
 
-
+// 新增线路信息
 router.post('/lineManagement/addLine',function(req,res){
     let param = req.body;
     let _res = res;
@@ -122,6 +122,7 @@ router.post('/lineManagement/addLine',function(req,res){
     console.log(req.body);
 })
 
+// 更新线路信息
 router.post('/lineManagement/updateLine',function(req,res){
     let param = req.body;
     let _res = res;
