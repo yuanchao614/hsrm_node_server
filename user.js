@@ -493,7 +493,7 @@ router.get('/user/deleOperator',(req,res) => { // 根据id删除
         pool.releaseConnection(conn) // 释放连接池，等待别的连接使用
     })
 });
-
+// 上传
 router.post('/user/uploadImg', (req, res) => {
     // 获取前台页面传过来的参数
     let param = req.body;

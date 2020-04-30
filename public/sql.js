@@ -1,8 +1,8 @@
 const userSQL = {
-    queryAll: 'select * from hsrm_user',   // 查询所有用户
+    queryAll: 'select * from hsrm_user',   // 查询所有系统用户
     queryByName: 'select * from  hsrm_user where username=?',  // 通过用户名索引查询用户
     queryByNamePassword: 'select * from  hsrm_user where username=? and password=?',  // 通过用户名和密码索引查询用户
-    insert: 'insert into hsrm_user set ?',  // 插入新用户
+    insert: 'insert into hsrm_user set ?',  // 新增用户
     updateUser: 'update hsrm_user set ? where username=?',// 更新用户信息
     deleteUser: 'delete from hsrm_user where username=?', // 删除用户
     islogin: 'update hsrm_user set active=1 where username=?', // 用户在线状态
@@ -40,14 +40,14 @@ const highSpeedTicketsManagement = {
 const orderManagement = {
     insert: 'insert into hsrm_order_ticket set ?', // 订票
     queryByPhoneNum: 'select * from  hsrm_order_ticket where phoneNum=?', // 根据手机号查找
-    deleteOrder: 'delete from hsrm_order_ticket where id=?'
+    deleteOrder: 'delete from hsrm_order_ticket where id=?' // 删除订票
 }
 
 const fontUser = {
-    register: 'insert into hsrm_font_user set ?',
-    queryByPhone: 'select * from  hsrm_font_user where phoneNum=?',  // 通过用户名索引查询用户
-    login: 'select * from  hsrm_font_user where phoneNum=? and password=?',
-    allFontUser: 'select * from  hsrm_font_user'
+    register: 'insert into hsrm_font_user set ?', // 订票用户注册
+    queryByPhone: 'select * from  hsrm_font_user where phoneNum=?',  // 通过手机号查询用户
+    login: 'select * from  hsrm_font_user where phoneNum=? and password=?', // 登录
+    allFontUser: 'select * from  hsrm_font_user' // 查询
 }
 
 module.exports = {

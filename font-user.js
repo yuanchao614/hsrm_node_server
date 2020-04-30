@@ -12,7 +12,6 @@ const jwt = require('jsonwebtoken') // 用于生成token
 /**
  * 用户登出功能
  */
-console.log(moment().format().split('+')[0]);
 router.get('/user/loginout', (req, res) => {
     let user = {
         username: req.query.name

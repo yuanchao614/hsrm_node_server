@@ -38,7 +38,7 @@ router.get('/highSpeedRailManagement/deleteRailById',(req,res) => { // 根据id�
 });
 
 
-router.get('/highSpeedRailManagement/getHighSpeedRail',(req,res) => { // 获取所有高铁线路
+router.get('/highSpeedRailManagement/getHighSpeedRail',(req,res) => { // 获取所有高铁列车信息
     let _res = res;
     pool.getConnection((err, conn) => {
         conn.query(highSpeedRailManagement.queryAllHighSpeedRail, (e, result) => {
@@ -67,7 +67,7 @@ router.get('/highSpeedRailManagement/getHighSpeedRail',(req,res) => { // 获取�
     })
 });
 
-
+// 新增高铁列车
 router.post('/highSpeedRailManagement/addRail',function(req,res){
     let param = req.body;
     let _res = res;
@@ -117,6 +117,7 @@ router.post('/highSpeedRailManagement/addRail',function(req,res){
     console.log(req.body);
 });
 
+// 更新高铁列车信息
 router.post('/highSpeedRailManagement/updateRail',function(req,res){
     let param = req.body;
     let _res = res;
